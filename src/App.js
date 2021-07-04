@@ -12,14 +12,16 @@ class App extends Component {
     pageTitle: 'Title!'
   }
 
-  changeTitleHandler = () => {
+  handleInput = (e) => {
+    this.setState({
+      pageTitle: e.target.value
+    })
+  }
 
-    const newTitle = `Title! is changed ${String.fromCharCode(Math.round(Math.random()*100))}`
-
+  changeTitleHandler = (newTitle) => {
     this.setState({
       pageTitle: newTitle
-    })
-    
+    })    
   }
 
   render () {
@@ -27,7 +29,7 @@ class App extends Component {
       textAlign: 'center'
     }
 
-    const buttonStyle = {
+    const InputStyle = {
       display: 'block',
       margin: '10px auto'
     }
@@ -39,10 +41,29 @@ class App extends Component {
 
         <h1>{this.state.pageTitle}</h1>
 
-        <button style={buttonStyle} onClick = {this.changeTitleHandler}> {'Change Title!'}</button>
+        <div style={InputStyle}>
+          <input type="tex" 
+            onChange = {this.handleInput.bind(this)}>
 
-        <Car name={cars[0].name} year={cars[0].year} />
-        <Car name={cars[1].name} year={cars[1].year} />
+          </input>
+
+          <button
+          onClick = {this.changeTitleHandler.bind(this,'changed')}> 
+            {'Change Title!'}
+          </button>
+        </div>
+
+        <Car 
+          name={cars[0].name} 
+          year={cars[0].year} 
+          onChangeTitle={this.changeTitleHandler.bind(this, cars[0].name)}
+        />
+
+        <Car 
+          name={cars[1].name} 
+          year={cars[1].year} 
+          onChangeTitle={()=>this.changeTitleHandler(cars[1].name)}
+        />
 
       </div>
     );

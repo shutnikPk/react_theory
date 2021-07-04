@@ -6,6 +6,6 @@ export default (props) => (
     <h3>{props.name}</h3>
     <p>Year: <strong>{props.year}</strong></p>
     <p>Random number: {Math.round(Math.random()*100)}</p>
-    {props.children}
+    <button onClick = {props.onChangeTitle}>{'Change Title Again!!'}</button>
   </div>
 )
