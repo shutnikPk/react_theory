@@ -9,19 +9,32 @@ class App extends Component {
       {name: 'Mazda', year: 2017},
       {name: 'Audi', year: 2016}
     ],
-    pageTitle: 'Title!'
+    pageTitle: 'Title!',
+    showCars: true
   }
 
-  handleInput = (e) => {
+  toggleCarsHandler = () => {
     this.setState({
-      pageTitle: e.target.value
+      showCars: !this.state.showCars
+    })
+
+  }
+
+  onChangeNameHandler = (name, index) => {
+    const car = this.state.cars[index]
+    car.name = name
+    const cars = [...this.state.cars]
+    cars[index] = car
+    this.setState({
+      cars: cars
     })
   }
 
-  changeTitleHandler = (newTitle) => {
-    this.setState({
-      pageTitle: newTitle
-    })    
+  onDeleteHandler = (index) => {
+    let cars = [...this.state.cars]
+    cars[index] = null
+    cars = cars.filter(car => car!==null)
+    this.setState({cars})
   }
 
   render () {
@@ -29,42 +42,32 @@ class App extends Component {
       textAlign: 'center'
     }
 
-    const InputStyle = {
-      display: 'block',
-      margin: '10px auto'
-    }
-
-    const cars = this.state.cars
-
     return (
       <div style={divStyle}>
 
         <h1>{this.state.pageTitle}</h1>
 
-        <div style={InputStyle}>
-          <input type="tex" 
-            onChange = {this.handleInput.bind(this)}>
-
-          </input>
-
+        <div className='InputStyle'>
           <button
-          onClick = {this.changeTitleHandler.bind(this,'changed')}> 
-            {'Change Title!'}
+          onClick = {this.toggleCarsHandler}> 
+            {'Toggle Cars'}
           </button>
         </div>
 
-        <Car 
-          name={cars[0].name} 
-          year={cars[0].year} 
-          onChangeTitle={this.changeTitleHandler.bind(this, cars[0].name)}
-        />
-
-        <Car 
-          name={cars[1].name} 
-          year={cars[1].year} 
-          onChangeTitle={()=>this.changeTitleHandler(cars[1].name)}
-        />
-
+        {this.state.showCars
+          ? this.state.cars.map((car, index)=>{
+            return (
+              <Car 
+                key={index}
+                name={car.name} 
+                year={car.year}
+                onDelete = {()=>this.onDeleteHandler(index)}
+                onChangeName = { event => this.onChangeNameHandler(event.target.value, index)}
+              />
+            )
+          })
+          : null
+        }
       </div>
     );
   }
